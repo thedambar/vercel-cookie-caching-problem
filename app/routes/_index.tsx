@@ -1,41 +1,28 @@
-import type { MetaFunction } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { json, LoaderFunction } from "@remix-run/node";
+import { getSession } from "~/lib/session.server";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  const data = session.get("data") || "No data set";
+  return json({ data });
 };
 
 export default function Index() {
+  const fetcher = useFetcher();
+  const {data} = useLoaderData<typeof loader>();
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div>
+      <fetcher.Form action="/api/setcookie" method="post">
+        <label htmlFor="cookieData">Cookie Data:</label>
+        <input type="text" id="cookieData" name="cookieData" />
+        <button type="submit">Set Cookie</button>
+      </fetcher.Form>
+
+      <div>
+        <strong>Cookie Data: {`${data}`}</strong>
+      </div>
     </div>
   );
 }
