@@ -1,6 +1,7 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { HeadersFunction, json, LoaderFunction } from "@remix-run/node";
 import { getSession } from "~/lib/session.server";
+import { cacheHeader } from "pretty-cache-header";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -28,8 +29,13 @@ export default function Index() {
 }
 
 
-export const headers: HeadersFunction = () => {
+export function headers() {
   return {
-    "Cache-Control": "no-store, max-age=0"
+    "Cache-Control": cacheHeader({
+      sMaxage: '1hour', // Shared cache maximum age
+      staleWhileRevalidate: '10min', // Time to serve stale content while revalidating
+      staleIfError: '1hour', // Time to serve stale content if there's an error
+      mustRevalidate: true // Adding must-revalidate directive
+    }),
+    "Accept-Encoding": 'br, gzip',
   };
-};
