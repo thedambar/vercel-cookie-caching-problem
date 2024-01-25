@@ -38,4 +38,5 @@ export function headers() {
       mustRevalidate: true // Adding must-revalidate directive
     }),
     "Accept-Encoding": 'br, gzip',
-  };
+  }
+}
