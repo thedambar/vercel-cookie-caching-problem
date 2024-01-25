@@ -1,5 +1,5 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { HeadersFunction, json, LoaderFunction } from "@remix-run/node";
+import { json, LoaderFunction } from "@remix-run/node";
 import { getSession } from "~/lib/session.server";
 import { cacheHeader } from "pretty-cache-header";
 
