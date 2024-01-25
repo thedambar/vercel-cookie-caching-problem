@@ -1,5 +1,5 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { json, LoaderFunction } from "@remix-run/node";
+import { HeadersFunction, json, LoaderFunction } from "@remix-run/node";
 import { getSession } from "~/lib/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -26,3 +26,10 @@ export default function Index() {
     </div>
   );
 }
+
+
+export const headers: HeadersFunction = () => {
+  return {
+    "Cache-Control": "no-store, max-age=0"
+  };
+};
